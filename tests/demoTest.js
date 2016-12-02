@@ -18,20 +18,20 @@
 //   done();
 // };
 
-module.exports = {
+// this.demoTestGoogle (browser) => {
+//   browser.url('http://www.google.com')
+//   browser.waitForElementVisible('body', 1000)
+//   browser.setValue('input[type=text]', 'nightwatch')
+//   browser.waitForElementVisible('button[name=btnG]', 1000)
+//   browser.click('button[name=btnG]')
+//   browser.pause(2000)
+//   browser.assert.containsText('#main', 'Night Watch')
+//   browser.end();
+// }
 
-  // before,
-  // after,
-  // beforeEach,
-  // afterEach,
-  'Demo test Google' : function (browser) {
-    browser.url('http://www.google.com')
-    browser.waitForElementVisible('body', 1000)
-    browser.setValue('input[type=text]', 'nightwatch')
-    browser.waitForElementVisible('button[name=btnG]', 1000)
-    browser.click('button[name=btnG]')
-    browser.pause(2000)
-    browser.assert.containsText('#main', 'Night Watch')
-    browser.end();
-  }
-};
+// module.exports = {
+//   before,
+//   after,
+//   beforeEach,
+//   afterEach,
+// };
