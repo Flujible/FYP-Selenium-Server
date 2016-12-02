@@ -13,3 +13,39 @@
 //         .end();
 //   }
 // }
+
+let data = {
+    url: 'http://www.google.com',
+    idOrClass: 'Class',
+    elementID: '_XIi',
+    action: 'Click',
+    value: '',
+    done: 'false'
+}
+
+this.templateTest = (browser) => {
+  browser.url(data.url);
+  browser.waitForElementVisible('body', 1000);
+  switch(data.action) {
+    case "Click":
+      if (data.idOrClass === 'ID') {
+        browser.click(`#${data.elementID}`);
+      } else {
+        browser.click(`.${data.elementID}`);
+      }
+      break;
+
+    case "Text Entry":
+      if (data.idOrClass === 'ID') {
+
+      } else {
+
+      }
+      break;
+
+    case "Assert":
+      break;
+  }
+  browser.pause(20000);
+  browser.end();
+}
