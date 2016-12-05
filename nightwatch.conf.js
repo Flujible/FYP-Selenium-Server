@@ -39,6 +39,16 @@ module.exports = {
   }
 }
 
+
+// redisClient.keys('*', function (keys) {
+//   keys.forEach(key => {
+//     redisClient.get(key, function (result) {
+//
+//     })
+//   })
+// })
+
+
 //Check if the selenium server and chromedriver have been successfully downloaded
 require('selenium-download').ensure('./bin', function(error) {
    if (error) {
