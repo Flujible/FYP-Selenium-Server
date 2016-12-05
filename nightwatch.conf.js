@@ -1,3 +1,10 @@
+// require('dotenv').load({
+//   silent: true
+// });
+//
+// let redisClient = require('redis').createClient(process.env.REDIS_URL);
+
+
 module.exports = {
   src_folders: "tests", //Where the tests are stored
   output_folder: "reports", //Where the test results are stored

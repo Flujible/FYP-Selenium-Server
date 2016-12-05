@@ -11,5 +11,8 @@
     "start": "node_modules/.bin/nightwatch --config nightwatch.conf.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^2.0.0"
+  }
 }
