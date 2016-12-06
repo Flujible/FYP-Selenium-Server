@@ -6,10 +6,6 @@ let rawData = { url: 'https://xes.io/contact/',
   {"id":"Class","element":"faint","action":"Assert","value": "Tell me all about your project. Include details such as schedule, budget and example sites you like."}]`
 }
 
-
-let testSteps = JSON.parse(rawData.steps);
-let totalSteps = testSteps.length;
-
 //Click on the element
 let clickCallback = (data, browser) => {
   if (data.id === 'ID') {
@@ -38,8 +34,12 @@ let assertCallback = (data, browser) => {
 }
 
 //Test script that will be used
-this.templateTest = (browser) => {
-  browser.url(rawData.url);
+templateTest = (data, browser) => {
+
+  let testSteps = JSON.parse(data.steps);
+  let totalSteps = testSteps.length;
+
+  browser.url(data.url);
   browser.waitForElementVisible('body', 1000);
 
   let actions = {
@@ -53,4 +53,9 @@ this.templateTest = (browser) => {
     browser.pause(500);
   });
   browser.end();
+}
+
+
+module.exports = {
+  test: this.templateTest
 }
