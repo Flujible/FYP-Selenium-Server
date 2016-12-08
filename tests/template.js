@@ -23,10 +23,14 @@
 //Test data until we can start pulling from the database
 let rawData = { url: 'https://xes.io/contact/',
   done: 'false',
-  steps: `[{"id":"ID","element":"name","action":"Click","value":""},
-  {"id":"ID","element":"name","action":"TextEntry","value":"George Bryant"},
-  {"id":"Class","element":"faint","action":"Assert","value": "Tell me all about your project. Include details such as schedule, budget and example sites you like."}]`
-}
+  steps: `[{"id":"ID","element":"name","action":"Click","value":""}]`
+};
+
+let testSteps = JSON.parse(rawData.steps);
+let totalSteps = testSteps.length;
+console.log("\n\n==========");
+console.log(totalSteps);
+console.log("==========\n\n");
 
 //Click on the element
 let clickCallback = (data, browser) => {
@@ -57,9 +61,6 @@ let assertCallback = (data, browser) => {
 
 //Test script that will be used
 templateTest = (data, browser) => {
-
-  let testSteps = JSON.parse(data.steps);
-  let totalSteps = testSteps.length;
 
   browser.url(data.url);
   browser.waitForElementVisible('body', 1000);
