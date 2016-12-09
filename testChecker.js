@@ -1,8 +1,36 @@
 let nightwatch = require('nightwatch');
+let redisClient = require('redis').createClient(process.env.REDIS_URL);
+let fs = require('fs');
 
-nightwatch.runner({
-  config: "./nightwatch.conf.js"
+redisClient.on('connect', () => {
+  console.log("Redis connected")
 });
+
+redisClient.keys('*', function (err, keys) {
+  if (err) {return console.log(err);}
+  let keyArray = keys;
+  console.log(keys);
+
+  keys.forEach(key => {
+    redisClient.hgetall(key, (err, object) => {
+      let value = object;
+      console.log("\n");
+      console.log(value);
+      if (value.done === 'false') {
+        fs.writeFile("tests/data.js", `module.exports = ${value.toString()}`, function(err) {
+          if (err) {
+            return console.error(err);
+          }
+
+          console.log("File created successfully");
+        });
+      }
+    });
+  });
+});
+// nightwatch.runner({
+//   config: "./nightwatch.conf.js"
+// });
 
 
 // I wanted to try and scan the redis database and only call nightwatch if there
@@ -14,22 +42,7 @@ nightwatch.runner({
 // let nightwatch = require('nightwatch');
 //
 //
-// redisClient.on('connect', () => {
-//   console.log("Redis connected")
-// })
-//
-// redisClient.keys('*', function (err, keys) {
-//   if (err) {return console.log(err);}
-//   let keyArray = keys;
-//   console.log(keys);
-//
-//   keys.forEach(key => {
-//     redisClient.hgetall(key, (err, object) => {
-//       let value = object;
-//       console.log("\n");
-//       console.log(value);
-//     });
-//   });
+
 
 
 //   keys.forEach(key => {
