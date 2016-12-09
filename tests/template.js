@@ -30,26 +30,26 @@ let assertCallback = (data, browser) => {
   }
 }
 
-//Test script that will be used
-templateTest = (data, browser) => {
-
-  browser.url(data.url);
-  browser.waitForElementVisible('body', 1000);
-
-  let actions = {
-    'Click': clickCallback,
-    'TextEntry': textEntryCallback,
-    'Assert': assertCallback,
-  };
-  browser.pause(500);
-  testSteps.forEach(step => {
-    actions[step.action](step, browser);
-    browser.pause(500);
-  });
-  browser.end();
-}
-
-
 module.exports = {
-  test: this.templateTest
+  //Test script that will be used
+  'templateTest': (browser) => {
+
+    let testSteps = JSON.parse(rawData.steps);
+    let totalSteps = testSteps.length;
+
+    browser.url(rawData.url);
+    browser.waitForElementVisible('body', 1000);
+
+    let actions = {
+      'Click': clickCallback,
+      'TextEntry': textEntryCallback,
+      'Assert': assertCallback,
+    };
+    browser.pause(500);
+    testSteps.forEach(step => {
+      actions[step.action](step, browser);
+      browser.pause(500);
+    });
+    browser.end();
+  }
 }
