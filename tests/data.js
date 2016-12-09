@@ -1,1 +1,5 @@
-module.exports = {"url":"https://www.google.com","steps":"[{\"id\":\"Class\",\"element\":\"\",\"action\":\"Click\",\"value\":\"\"},{\"id\":\"Class\",\"element\":\"\",\"action\":\"Click\",\"value\":\"\"}]","done":"false"},\"element\":\"\",\"action\":\"Click\",\"value\":\"\"}]","done":"false"}
+module.exports = {
+  data: {"url": "https://www.xes.io/contact/",
+    "steps": "[{\"id\":\"ID\",\"element\":\"name\",\"action\":\"Click\",\"value\":\"\"},{\"id\":\"ID\",\"element\":\"name\",\"action\":\"Text Entry\",\"value\":\"George Bryant\"}]",
+    "done": "false"}
+  }
