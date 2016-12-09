@@ -17,7 +17,7 @@ redisClient.keys('*', function (err, keys) {
       console.log("\n");
       console.log(value);
       if (value.done === 'false') {
-        fs.writeFile("tests/data.js", `module.exports = ${value.toString()}`, function(err) {
+        fs.writeFile("tests/data.js", `module.exports = ${JSON.stringify(value)}`, function(err) {
           if (err) {
             return console.error(err);
           }
