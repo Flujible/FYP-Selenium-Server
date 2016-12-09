@@ -1,36 +1,7 @@
-// let redisClient = require('redis').createClient(process.env.REDIS_URL);
-// let nightwatch = require('nightwatch');
-//
-//
-// redisClient.on('connect', () => {
-//   console.log("Redis connected")
-// })
-//
-// redisClient.keys('*', function (err, keys) {
-//   if (err) {return console.log(err);}
-//   let keyArray = keys;
-//   console.log(keys);
-//
-//   keys.forEach(key => {
-//     redisClient.hgetall(key, (err, object) => {
-//       let value = object;
-//       console.log("\n");
-//       console.log(value);
-//     });
-//   });
-
+let dataFile = require("./data.js")
 
 //Test data until we can start pulling from the database
-let rawData = { url: 'https://xes.io/contact/',
-  done: 'false',
-  steps: `[{"id":"ID","element":"name","action":"Click","value":""}]`
-};
-
-let testSteps = JSON.parse(rawData.steps);
-let totalSteps = testSteps.length;
-console.log("\n\n==========");
-console.log(totalSteps);
-console.log("==========\n\n");
+let rawData = dataFile.data;
 
 //Click on the element
 let clickCallback = (data, browser) => {
