@@ -1,24 +1,24 @@
 {
-  "done": "false",
-  "url": "https://xes.io/contact/",
-  "steps": [
-              {
-                "id": "ID",
-                "element": "name",
-                "action": "Click",
-                "value": ""
-              },
-              {
-                "id": "ID",
-                "element": "name",
-                "action": "TextEntry",
-                "value": "George Bryant"
-              },
-              {
-                "id": "ID",
-                "element": "name",
-                "action": "TextEntry",
-                "value": ""
-              }
-            ]
+    "done": "false",
+    "url": "https://www.google.com",
+    "steps": [
+        {
+            "id": "ID",
+            "element": "lst-ib",
+            "action": "Click",
+            "value": ""
+        },
+        {
+            "id": "ID",
+            "element": "lst-ib",
+            "action": "TextEntry",
+            "value": "George Bryant"
+        },
+        {
+            "id": "ID",
+            "element": "lst-ib",
+            "action": "TextEntry",
+            "value": ""
+        }
+    ]
 }
