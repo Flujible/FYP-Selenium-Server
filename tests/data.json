@@ -1,0 +1,24 @@
+{
+  "done": "false",
+  "url": "https://xes.io/contact/",
+  "steps": [
+              {
+                "id": "ID",
+                "element": "name",
+                "action": "Click",
+                "value": ""
+              },
+              {
+                "id": "ID",
+                "element": "name",
+                "action": "TextEntry",
+                "value": "George Bryant"
+              },
+              {
+                "id": "ID",
+                "element": "name",
+                "action": "TextEntry",
+                "value": ""
+              }
+            ]
+}

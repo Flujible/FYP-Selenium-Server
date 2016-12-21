@@ -1,7 +1,4 @@
-let dataFile = require("./data.js")
-
-//Test data until we can start pulling from the database
-let rawData = dataFile.data;
+let rawData = require("./data.json")
 
 //Click on the element
 let clickCallback = (data, browser) => {
@@ -34,7 +31,7 @@ module.exports = {
   //Test script that will be used
   'templateTest': (browser) => {
 
-    let testSteps = JSON.parse(rawData.steps);
+    let testSteps = rawData.steps;
     let totalSteps = testSteps.length;
 
     browser.url(rawData.url);
