@@ -22,9 +22,14 @@ redisClient.keys('*', function (err, keys) {
           if (err) {
             return console.error(err);
           }
-
           console.log("File created successfully");
+
         });
+        //This may need a setTimout if the files get written to quickly
+        nightwatch.runner({config: "./nightwatch.conf.js"});
+        //
+        // Need to set done to true here
+        //
       }
     });
   });
