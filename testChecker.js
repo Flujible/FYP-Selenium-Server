@@ -1,6 +1,8 @@
 let nightwatch = require('nightwatch');
 let redisClient = require('redis').createClient(process.env.REDIS_URL);
 let fs = require('fs');
+let asyn = require('async');
+let sleep = require('sleep');
 
 redisClient.on('connect', () => {
   console.log("Redis connected")
@@ -21,7 +23,7 @@ let writeFile = (key) => {
         if (err) {
           return console.error(err);
         }
-        console.log("File created successfully");
+        console.log("++++++++++ File created successfully ++++++++++");
       });
 
     }
@@ -40,8 +42,12 @@ redisClient.keys('*', function (err, keys) {
   if (err) {return console.log(err);}
   console.log(keys);
 
-  for (let i = 0; i < keys.length; i++) {
-    writeFile(keys[i]);
-    exec(keys[i]);
+  for (let i = keys.length; i > 0; i--) {
+    asyn.series([
+      writeFile(keys[i]),
+      sleep.sleep(15),
+      exec(keys[i]),
+      sleep.sleep(10)
+    ]);
   }
 });
