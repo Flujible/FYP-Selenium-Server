@@ -67,9 +67,17 @@ let runTests = () => {
   });
 };
 
+let markDone = keys => {
+  keys.forEach(key => {
+    client.hmset(key, "done", "true");
+  })
+}
+
 // Get the Redis keys and store them in an array
 redisClient.keys('*', function (err, keys) {
   if (err) {return console.log(err);}
   console.log(keys);
-  writeKeys(keys).then(runTests);
+
+  writeKeys(keys).then(runTests).then(markDone(keys));
+
 });
