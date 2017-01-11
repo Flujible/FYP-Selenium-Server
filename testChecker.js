@@ -23,11 +23,11 @@ let writeKey = function (key) {
             if (err) {
               return reject(err);
             } else {
-              return resolve(true);
+              return resolve(key);
             }
           });
         } else {
-          return Promise.resolve();
+          return undefined;
         }
       });
 
@@ -43,6 +43,12 @@ let writeKeys = keys => {
     inProgress.push(writeKey(key));
   });
 
+  inProgress = inProgress.filter(i => {
+    return typeof i !== 'undefined';
+  });
+
+  //This will return a promise which resolves to true if all of the promises in
+  //the inProgress array resolve, or if any of them fail, it will reject
   return Promise.all(inProgress);
 };
 
