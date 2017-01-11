@@ -58,10 +58,12 @@ function through the chained promises, and then those keys can be marked as done
 
 //Executes nightwatch
 let runTests = () => {
-  let config = './nightwatch.conf.js';
-  nightwatch.runner({ config }, () => {
-    console.log('Done');
-    process.exit(0);
+  return new Promise(function(resolve, reject) {
+    let config = './nightwatch.conf.js';
+    nightwatch.runner({ config }, () => {
+      console.log('Done');
+      return resolve(1);
+    });
   });
 };
 
