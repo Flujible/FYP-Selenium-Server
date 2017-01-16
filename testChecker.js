@@ -64,8 +64,16 @@ let runTests = (keys) => {
 };
 
 let markDone = keys => {
+  let done = 0, length = keys.length;
   keys.forEach(key => {
-    client.hmset(key, "done", "true");
+    console.log(`:: Marking ${key} as done`);
+    redisClient.hset(key, "done", "true", function(err, res) {
+      if(err) {return console.log(err);}
+      if (++done === length) {
+        console.log(`:: Program done`);
+        process.exit();
+      }
+    });
   })
 }
 
