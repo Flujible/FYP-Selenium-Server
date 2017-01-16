@@ -52,17 +52,13 @@ let writeKeys = keys => {
   return Promise.all(inProgress);
 };
 
-I want to take the inProgress array that is used above, pass it into the runTests 
-function, and return the same array so that it can be passed into the markDone
-function through the chained promises, and then those keys can be marked as done
-
 //Executes nightwatch
-let runTests = () => {
+let runTests = (keys) => {
   return new Promise(function(resolve, reject) {
     let config = './nightwatch.conf.js';
     nightwatch.runner({ config }, () => {
       console.log('Done');
-      return resolve(1);
+      return resolve(keys);
     });
   });
 };
@@ -78,6 +74,6 @@ redisClient.keys('*', function (err, keys) {
   if (err) {return console.log(err);}
   console.log(keys);
 
-  writeKeys(keys).then(runTests).then(markDone(keys));
+  writeKeys(keys).then(runTests).then(markDone);
 
 });
