@@ -63,18 +63,18 @@ let runTests = (keys) => {
   });
 };
 
-let markDone = keys => {
+let cleanUp = keys => {
   let done = 0, length = keys.length;
   keys.forEach(key => {
     console.log(`:: Marking ${key} as done`);
     redisClient.hset(key, "done", "true", function(err, res) {
       if(err) {return console.log(err);}
       if (++done === length) {
-        console.log(`:: Program done`);
-        process.exit();
+        console.log(`:: DB entries marked as done`);
       }
     });
-  })
+    fs.unlink(`tests/${key}.js`);
+  });
 }
 
 // Get the Redis keys and store them in an array
@@ -82,6 +82,6 @@ redisClient.keys('*', function (err, keys) {
   if (err) {return console.log(err);}
   console.log(keys);
 
-  writeKeys(keys).then(runTests).then(markDone);
+  writeKeys(keys).then(runTests).then(cleanUp);
 
 });
