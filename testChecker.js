@@ -31,7 +31,7 @@ let writeKey = function (key) {
             }
           });
         } else {
-          return undefined;
+          return resolve(undefined);
         }
       });
 
@@ -45,10 +45,6 @@ let writeKeys = keys => {
 
   keys.forEach(key => {
     inProgress.push(writeKey(key));
-  });
-
-  inProgress = inProgress.filter(i => {
-    return typeof i !== 'undefined';
   });
 
   //This will return a promise which resolves to true if all of the promises in
