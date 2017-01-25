@@ -1,6 +1,10 @@
 let redisClient = require('redis').createClient(process.env.REDIS_URL);
 let nightwatch = require('nightwatch');
 let fs = require('fs');
+let xml2js = require('xml2js');
+
+let systemSetup = "CHROME_55.0.2883.87_LINUX_";
+let parser = new xml2js.Parser();
 
 //Connect to the redis DB
 redisClient.on('connect', () => {
@@ -67,13 +71,56 @@ let cleanUp = keys => {
   let done = 0, length = keys.length;
   keys.forEach(key => {
     console.log(`:: Marking ${key} as done`);
-    redisClient.hset(key, "done", "true", function(err, res) {
-      if(err) {return console.log(err);}
-      if (++done === length) {
-        console.log(`:: DB entries marked as done`);
-      }
+    fs.readFile(`reports/${systemSetup}${key}.xml`, 'utf-8', (err, data) => {
+      if (err) {return reject(err);}
+      parser.parseString(data, (err, result) => {
+        if (result.testsuites['$'].errors === '0' && result.testsuites['$'].failures === '0') {
+          redisClient.hset(key, "status", "successful", function(err, res) {
+                if(err) {return reject(err);}
+                fs.unlink(`tests/${key}.js`);
+                return resolve(key);
+              });
+        } else {
+          redisClient.hset(key, "status", "failed", function(err, res) {
+                if(err) {return reject(err);}
+              });
+              fs.unlink(`tests/${key}.js`);
+              return resolve(key);
+        }
+        // result = JSON.stringify(result, null, 4);
+      });
     });
-    fs.unlink(`tests/${key}.js`);
+  });
+}
+
+let writeResults = keys => {
+  let inProgress = [];
+
+  keys.forEach(key => {
+    inProgress.push(writeResult(key));
+  });
+
+  //This will return a promise which resolves to true if all of the promises in
+  //the inProgress array resolve, or if any of them fail, it will reject
+  return Promise.all(inProgress);
+};
+
+let writeResult = key => {
+  return new Promise(function(resolve, reject) {
+    fs.readFile(`reports/${systemSetup}${key}.xml`, 'utf-8', (err, data) => {
+      if (err) {return reject(err)};
+      //Cant change to JSON easily as there are objects within objetcs, so
+      //stringifying once doesnt actually stringify everything, and stringifying
+      //twice causes issues with the beginning of the JSON
+      //parser.parseString(data, (err, result) => {
+        //result = JSON.stringify(result);
+        // console.log(data);
+        redisClient.hset(key, "result", data, function(err, res) {
+          if(err) {return reject(err);}
+          return resolve(key);
+        });
+      //})
+    });
   });
 }
 
