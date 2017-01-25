@@ -55,11 +55,17 @@ let writeKeys = keys => {
 //Executes nightwatch
 let runTests = (keys) => {
   return new Promise(function(resolve, reject) {
-    let config = './nightwatch.conf.js';
-    nightwatch.runner({ config }, () => {
-      console.log('Done');
-      return resolve(keys);
-    });
+    keys = keys.filter(key => typeof key !== 'undefined');
+    if (keys.length > 0) {
+      let config = './nightwatch.conf.js';
+      nightwatch.runner({ config }, () => {
+        console.log(':: Done');
+        return resolve(keys);
+      });
+    } else {
+      console.log(':: No tests to run, exiting');
+      process.exit();
+    }
   });
 };
 
