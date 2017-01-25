@@ -19,7 +19,7 @@ let writeKey = function (key) {
       let value = object;
 
       //Write the steps outlined in the redis database to a JSON file
-      if (value.done === 'false') {
+      if (value.status === 'pending') {
         value.steps = JSON.parse(value.steps);
         fs.writeFile(`tests/${key}.js`,
           `module.exports = { '${key}' : require('../testUtils')(${JSON.stringify(value, null, 4)})};`
