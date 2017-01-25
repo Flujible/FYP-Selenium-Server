@@ -69,9 +69,10 @@ let runTests = (keys) => {
   });
 };
 
-let cleanUp = keys => {
-  let done = 0, length = keys.length;
-  keys.forEach(key => {
+let cleanUp = keys => Promise.all(keys.map(purgeKey));
+
+let purgeKey = key => {
+  return new Promise(function(resolve, reject) {
     console.log(`:: Marking ${key} as done`);
     fs.readFile(`reports/${systemSetup}${key}.xml`, 'utf-8', (err, data) => {
       if (err) {return reject(err);}
@@ -131,6 +132,6 @@ redisClient.keys('*', function (err, keys) {
   if (err) {return console.log(err);}
   console.log(keys);
 
-  writeKeys(keys).then(runTests).then(cleanUp);
+  writeKeys(keys).then(runTests).then(writeResults).then(cleanUp).then(process.exit);
 
 });
