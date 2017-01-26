@@ -13,8 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "async": "^2.1.4",
-    "dotenv": "^2.0.0",
-    "sleep": "^5.0.0"
+    "dotenv": "^2.0.0"
   }
 }
