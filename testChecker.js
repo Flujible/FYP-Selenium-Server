@@ -3,12 +3,11 @@ let nightwatch = require('nightwatch');
 let fs = require('fs');
 let xml2js = require('xml2js');
 
-let systemSetup = "CHROME_55.0.2883.87_LINUX_";
 let parser = new xml2js.Parser();
 
 //Connect to the redis DB
 redisClient.on('connect', () => {
-  console.log("Redis connected")
+  console.log("Redis connected");
 });
 
 //Returns a promise which resolves when the files are written and rejects if they dont
@@ -69,32 +68,51 @@ let runTests = (keys) => {
   });
 };
 
-let cleanUp = keys => Promise.all(keys.map(purgeKey));
+let cleanUp = keys => {
+  console.log(":: cleanUp function");
+  return Promise.all(keys.map(purgeKey));
+};
+
 
 let purgeKey = key => {
   return new Promise(function(resolve, reject) {
     console.log(`:: Marking ${key} as done`);
-    fs.readFile(`reports/${systemSetup}${key}.xml`, 'utf-8', (err, data) => {
-      if (err) {return reject(err);}
-      parser.parseString(data, (err, result) => {
-        if (result.testsuites['$'].errors === '0' && result.testsuites['$'].failures === '0') {
-          redisClient.hset(key, "status", "successful", function(err, res) {
-                if(err) {return reject(err);}
-                fs.unlink(`tests/${key}.js`);
-                return resolve(key);
-              });
-        } else {
-          redisClient.hset(key, "status", "failed", function(err, res) {
-                if(err) {return reject(err);}
-              });
-              fs.unlink(`tests/${key}.js`);
-              return resolve(key);
+    fs.readdir("reports", (err, files) => {
+      console.log(`:: fs.readdir initiated`);
+      if(err) {
+        console.log(`:: Error finding reports folder`);
+        console.error(err);
+      }
+      console.log(`:: Folder found`);
+      files.forEach(file => {
+        if (file.includes(key)) {
+          console.log(`:: About to read file`);
+          fs.readFile(`reports/${file}`, 'utf-8', (err, data) => {
+            if (err) return reject(err);
+            parser.parseString(data, (err, result) => {
+              if(err) return reject(err);
+              if (result.testsuites['$'].errors === '0' && result.testsuites['$'].failures === '0') {
+                redisClient.hset(key, "status", "successful", function(err, _) {
+                  if(err) return reject(err);
+                  fs.unlink(`tests/${key}.js`);
+                  console.log(`:: Resolving on successful`);
+                  return resolve(key);
+                });
+              } else {
+                redisClient.hset(key, "status", "failed", function(err, _) {
+                  if(err) return reject(err);
+                  fs.unlink(`tests/${key}.js`);
+                  console.log(`:: Resolving on failed`);
+                  return resolve(key);
+                });
+              }
+            });
+          });
         }
-        // result = JSON.stringify(result, null, 4);
       });
     });
   });
-}
+};
 
 let writeResults = keys => {
   let inProgress = [];
@@ -110,22 +128,28 @@ let writeResults = keys => {
 
 let writeResult = key => {
   return new Promise(function(resolve, reject) {
-    fs.readFile(`reports/${systemSetup}${key}.xml`, 'utf-8', (err, data) => {
-      if (err) {return reject(err)};
-      //Cant change to JSON easily as there are objects within objetcs, so
-      //stringifying once doesnt actually stringify everything, and stringifying
-      //twice causes issues with the beginning of the JSON
-      //parser.parseString(data, (err, result) => {
-        //result = JSON.stringify(result);
-        // console.log(data);
-        redisClient.hset(key, "result", data, function(err, res) {
-          if(err) {return reject(err);}
-          return resolve(key);
-        });
-      //})
+    fs.readdir("reports", (err, files) => {
+      if(err) console.error(err);
+      files.forEach(file => {
+        if (file.includes(key)) {
+          console.log(`:: File ${file} contains key`);
+          fs.readFile(`reports/${file}`, 'utf-8', (err, data) => {
+            if (err) {
+              console.log(`:: Rejecting ${key}`);
+              return reject(err);
+            } else {
+              redisClient.hset(key, "result", data, function(err, _) {
+                if(err) {return reject(err);}
+                console.log(`:: Writing result - resolving ${key}`);
+                return resolve(key);
+              });
+            }
+          });
+        }
+      });
     });
   });
-}
+};
 
 // Get the Redis keys and store them in an array
 redisClient.keys('*', function (err, keys) {
