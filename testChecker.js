@@ -18,8 +18,8 @@ let writeKey = function (key) {
       let value = object;
 
       //Write the steps outlined in the redis database to a JSON file
-      if (value.status === 'pending') {
         value.steps = JSON.parse(value.steps);
+        if (value.status === 'pending') {
         fs.writeFile(`tests/${key}.js`,
           `module.exports = { '${key}' : require('../testUtils')(${JSON.stringify(value, null, 4)})};`
           , 'utf8', err => {
@@ -41,13 +41,9 @@ let writeKey = function (key) {
 //returns a promise
 let writeKeys = keys => {
   let inProgress = [];
-
   keys.forEach(key => {
     inProgress.push(writeKey(key));
   });
-
-  //This will return a promise which resolves to true if all of the promises in
-  //the inProgress array resolve, or if any of them fail, it will reject
   return Promise.all(inProgress);
 };
 
@@ -153,9 +149,9 @@ let writeResult = key => {
 
 // Get the Redis keys and store them in an array
 redisClient.keys('*', function (err, keys) {
-  if (err) {return console.log(err);}
+  if (err) return console.log(err);
   console.log(keys);
-
-  writeKeys(keys).then(runTests).then(writeResults).then(cleanUp).then(process.exit);
-
+  writeKeys(keys).then(runTests).then(writeResults).then(cleanUp).then(function () {
+    process.exit(0);
+  });
 });
