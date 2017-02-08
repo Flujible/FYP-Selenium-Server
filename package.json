@@ -8,8 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node runner.js",
-    "single": "node testChecker.js"
+    "start": "node runner.js"
   },
   "author": "",
   "license": "ISC",

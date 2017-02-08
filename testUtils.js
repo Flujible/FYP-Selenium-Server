@@ -41,11 +41,11 @@ module.exports = rawData => {
         'Assert': assertCallback,
       };
 
-      browser.pause(500);
+      browser.pause(3000);
       testSteps.forEach(step => {
         console.log(step, typeof actions[step.action]);
         actions[step.action](step, browser);
-        browser.pause(500);
+        browser.pause(3000);
       });
       browser.end();
     }
