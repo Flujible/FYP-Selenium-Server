@@ -30,7 +30,7 @@ module.exports = {
       }
     }
   }
-}
+};
 
 //Check if the selenium server and chromedriver have been successfully downloaded
 require('selenium-download').ensure('./bin', function(error) {

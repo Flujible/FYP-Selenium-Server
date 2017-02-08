@@ -1,5 +1,5 @@
 let redisClient = require('redis').createClient(process.env.REDIS_URL);
-let nightwatch = require('nightwatch');
+let nightwatch;
 let fs = require('fs');
 let xml2js = require('xml2js');
 
@@ -147,11 +147,22 @@ let writeResult = key => {
   });
 };
 
-// Get the Redis keys and store them in an array
-redisClient.keys('*', function (err, keys) {
-  if (err) return console.log(err);
-  console.log(keys);
-  writeKeys(keys).then(runTests).then(writeResults).then(cleanUp).then(function () {
-    process.exit(0);
+let exec = () => {
+  // Get the redis keys and store them in an array
+  redisClient.keys('*', function (err, keys) {
+    if (err) return console.log(err);
+    writeKeys(keys)
+      .then(runTests).catch(reason => {
+        console.log(`:: Catch: ${reason}`);
+        process.exit();
+      })
+      .then(writeResults)
+      .then(cleanUp)
+      .then(() => {
+        console.log(":: Finished running exec");
+        process.exit(0);
+    });
   });
-});
+};
+
+exec();
