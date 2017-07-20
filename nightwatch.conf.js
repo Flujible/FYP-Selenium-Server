@@ -10,11 +10,11 @@ module.exports = {
   output_folder: "reports", //Where the test results are stored
   selenium: { //allows us to define how selenium will run
     start_process: true, //Nightwatch itself will be starting the selenium server
-    server_path: "./node_modules/nightwatch/bin/selenium.jar",
+    server_path: "./bin/selenium.jar",
     host: "127.0.0.1",
     port: "4444",
     cli_args: {
-      "webdriver.chrome.driver": "./node_modules/nightwatch/bin/chromedriver"
+      "webdriver.chrome.driver": "./bin/chromedriver"
     }
   },
   test_settings: {
